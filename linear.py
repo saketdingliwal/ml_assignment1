@@ -23,7 +23,7 @@ x0 = np.ones((m,1))
 X = np.hstack((x0,X)) # adding ones to training vectors
 
 alpha = 0.00004 # learning rate
-epsilon = 0.0000001 # stopping criterion
+epsilon = 0.000000001 # stopping criterion
 
 
 
@@ -47,8 +47,18 @@ def gradient_descent():
         theta = theta + alpha * update_theta
 
 
+def normal_eqns():
+    global X,Y
+    Xt = np.transpose(X)
+    Xt_X = np.matmul(Xt,X)
+    Xt_X_inv = np.linalg.inv(Xt_X)
+    Xt_X_inv_Xt = np.matmul(Xt_X_inv,Xt)
+    theta = np.matmul(Xt_X_inv_Xt,Y)
+    return theta
+
 
 theta = gradient_descent()
+# theta = normal_eqns()
 X_min = np.min(X_save)
 X_max = np.max(X_save)
 Y_min = theta[0][0] + theta[1][0] * X_min
