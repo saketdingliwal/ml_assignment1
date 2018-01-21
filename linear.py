@@ -3,14 +3,16 @@ import sys
 import numpy as np
 from numpy import genfromtxt
 import time
-
+import matplotlib.pyplot as plt
 
 X = genfromtxt('dataset/linearX.csv',delimiter = ',') # list of training example vectors
+X_save = X
 if X.ndim == 1:
     X = X[np.newaxis]
     X = np.transpose(X) # convert into 2-d matrix if there is only one feature
 
 Y = genfromtxt('dataset/linearY.csv',delimiter = ',') # list of training outputs
+Y_save = Y
 Y = Y[np.newaxis]
 Y = np.transpose(Y) # now we have Y as column vector
 
@@ -21,7 +23,7 @@ x0 = np.ones((m,1))
 X = np.hstack((x0,X)) # adding ones to training vectors
 
 alpha = 0.00004 # learning rate
-epsilon = 0.0001 # stopping criterion
+epsilon = 0.0000001 # stopping criterion
 
 
 
@@ -36,7 +38,7 @@ def gradient_descent():
         hypothesis_val = np.matmul(X,theta)
         error = Y - hypothesis_val
         J_theta = 0.5 * np.matmul(np.transpose(error),error)
-        print "iteration count -> ", count_iter, "\t J(theta) -> ",np.asscalar(J_theta)
+        # print "iteration count -> ", count_iter, "\t J(theta) -> ",np.asscalar(J_theta)
         if abs(np.asscalar(J_theta - prev_J_theta)) < epsilon:
             return theta
         prev_J_theta = J_theta
@@ -45,4 +47,12 @@ def gradient_descent():
         theta = theta + alpha * update_theta
 
 
+
 theta = gradient_descent()
+X_min = np.min(X_save)
+X_max = np.max(X_save)
+Y_min = theta[0][0] + theta[1][0] * X_min
+Y_max = theta[0][0] + theta[1][0] * X_max
+plt.plot([X_min,X_max],[Y_min,Y_max],c='b')
+plt.plot(X_save, Y_save,'ro')
+plt.show()
