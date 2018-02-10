@@ -69,6 +69,8 @@ for i in range(m):
     else:
         plt.plot(X[i][0],X[i][1],'ro',c='r')
 
+
+
 cov_inv = np.linalg.inv(cov)
 cov_u1 = np.matmul(cov_inv,np.transpose(u1))
 u1_cov_u1 = np.matmul(u1,cov_u1)
@@ -83,5 +85,24 @@ X_min = np.min(X_transpose[0])
 X_max = np.max(X_transpose[0])
 x = np.linspace(X_min, X_max, 50)
 plt.plot(x,(-1.0/theta[2])*(theta[0]+theta[1]*x),c='g')
+
+cov0_det = np.linalg.det(cov0)
+cov1_det = np.linalg.det(cov1)
+cov0_inv = np.linalg.inv(cov0)
+cov1_inv = np.linalg.inv(cov1)
+cov1_u1 = np.matmul(cov1_inv,np.transpose(u1))
+u1_cov1_u1 = np.matmul(u1,cov1_u1)
+cov0_u0 = np.matmul(cov0_inv,np.transpose(u0))
+u0_cov0_u0 = np.matmul(u0,cov0_u0)
+diff_mat = cov0_inv - cov1_inv
+
+const = math.log(abs(cov0_det/cov1_det)) + u0_cov0_u0 - u1_cov1_u1
+x1_x1 = diff_mat[0][0]
+x2_x2 = diff_mat[1][1]
+x1_x2 = diff_mat[0][1] + diff_mat[1][0]
+x1 = 2 * cov1_u1[0][0] - 2 * cov0_u0[0][0]
+x2 = 2 * cov1_u1[1][0] - 2 * cov0_u0[1][0]
+
+
 plt.plot()
 plt.show()
