@@ -50,8 +50,9 @@ def gradient_descent():
         hypothesis_val = np.matmul(X,theta)
         error = Y - hypothesis_val
         J_theta = 0.5 * np.matmul(np.transpose(error),error)
-        if count_iter%10==1:
-            ax.scatter(theta[0],theta[1],J_theta[0][0],marker='o',c='r')
+        # if count_iter%10==1:
+        ax.scatter(theta[0],theta[1],J_theta[0][0],marker='o',c='r',s=2)
+        plt.pause(0.02)
         print "iteration count -> ", count_iter, "\t J(theta) -> ",np.asscalar(J_theta)
         if abs(np.asscalar(J_theta - prev_J_theta)) < epsilon:
             return theta
@@ -76,8 +77,8 @@ ax = fig.gca(projection='3d')
 
 # Make data.
 # theta = gradient_descent()
-theta1 = np.arange(-0.5,1,0.005)
-theta2 = np.arange(0,1,0.005)
+theta1 = np.arange(-0.15,1.8,0.01)
+theta2 = np.arange(-0.7,0.7,0.01)
 theta1, theta2 = np.meshgrid(theta1, theta2)
 for i in range(m):
     if i==0:
@@ -88,19 +89,16 @@ Z = Z /2.0
 
 
 # Plot the surface.
-surf = ax.plot_surface(theta1, theta2, Z, cmap=cm.coolwarm,
-                       linewidth=0, antialiased=False)
+surf = ax.plot_wireframe(theta1, theta2, Z,linewidth=0.5)
 
-# Customize the z axis.
-# ax.set_zlim(-1.01, 50)
-ax.zaxis.set_major_locator(LinearLocator(10))
-ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
+# ax.zaxis.set_major_locator(LinearLocator(10))
+# ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
 
+plt.ion()
 theta = gradient_descent()
 # Add a color bar which maps values to colors.
 # fig.colorbar(surf, shrink=0.5, aspect=5)
 
-plt.show()
 
 #
 

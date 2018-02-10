@@ -10,15 +10,15 @@ X_save = X
 if X.ndim == 1:
     X = X[np.newaxis]
     X = np.transpose(X) # convert into 2-d matrix if there is only one feature
-# print X
+
+#normalize data
 std_dev =  np.std(X,axis=0)
 mean = np.mean(X,axis=0)
 mean = np.tile(mean,(len(X),1))
 std_dev = np.tile(std_dev,(len(X),1))
-
 X = (X - mean)/std_dev
 
-# print X
+
 
 Y = genfromtxt('dataset/linearY.csv',delimiter = ',') # list of training outputs
 Y_save = Y
@@ -67,10 +67,11 @@ def normal_eqns():
 
 
 theta = gradient_descent()
-# theta = normal_eqns()
+# convert data to be plotted to standard form
 X_save = (X_save-np.mean(X_save))/np.std(X_save)
 X_min = np.min(X_save)
 X_max = np.max(X_save)
+# get the linear line to be plotted
 Y_min = theta[0][0] + theta[1][0] * X_min
 Y_max = theta[0][0] + theta[1][0] * X_max
 plt.plot([X_min,X_max],[Y_min,Y_max],c='b')

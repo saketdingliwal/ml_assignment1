@@ -106,9 +106,9 @@ x = np.linspace(X_min, X_max, 50)
 value_under_sqrt = (((x1_x2*x) + (x2))/(2*x2_x2))**2 - (x1_x1*x*x + x1*x + const)/x2_x2
 vall = value_under_sqrt**(0.5)
 y_choice = vall - (((x1_x2*x) + (x2))/(2*x2_x2))
+plt.plot(x,y_choice[0],c='cyan')
 # print x
 # print y_choice
-plt.plot(x,y_choice[0],c='cyan')
 
 
 plt.plot()
