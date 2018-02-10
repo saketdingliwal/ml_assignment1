@@ -102,6 +102,13 @@ x2_x2 = diff_mat[1][1]
 x1_x2 = diff_mat[0][1] + diff_mat[1][0]
 x1 = 2 * cov1_u1[0][0] - 2 * cov0_u0[0][0]
 x2 = 2 * cov1_u1[1][0] - 2 * cov0_u0[1][0]
+x = np.linspace(X_min, X_max, 50)
+value_under_sqrt = (((x1_x2*x) + (x2))/(2*x2_x2))**2 - (x1_x1*x*x + x1*x + const)/x2_x2
+vall = value_under_sqrt**(0.5)
+y_choice = vall - (((x1_x2*x) + (x2))/(2*x2_x2))
+# print x
+# print y_choice
+plt.plot(x,y_choice[0],c='cyan')
 
 
 plt.plot()
