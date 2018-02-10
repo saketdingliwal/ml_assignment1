@@ -15,6 +15,13 @@ X_save = X
 if X.ndim == 1:
     X = X[np.newaxis]
     X = np.transpose(X) # convert into 2-d matrix if there is only one feature
+std_dev =  np.std(X,axis=0)
+mean = np.mean(X,axis=0)
+mean = np.tile(mean,(len(X),1))
+std_dev = np.tile(std_dev,(len(X),1))
+
+X = (X - mean)/std_dev
+
 
 Y = genfromtxt('dataset/linearY.csv',delimiter = ',') # list of training outputs
 Y_save = Y

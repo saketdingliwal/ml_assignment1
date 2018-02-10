@@ -16,6 +16,14 @@ if X.ndim == 1:
     X = X[np.newaxis]
     X = np.transpose(X) # convert into 2-d matrix if there is only one feature
 
+std_dev =  np.std(X,axis=0)
+mean = np.mean(X,axis=0)
+mean = np.tile(mean,(len(X),1))
+std_dev = np.tile(std_dev,(len(X),1))
+
+X = (X - mean)/std_dev
+
+
 m = len(X) # number of training examples
 if m == 0 :
     print "Training data missing"
