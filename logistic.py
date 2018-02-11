@@ -12,6 +12,8 @@ if X.ndim == 1:
     X = np.transpose(X) # convert into 2-d matrix if there is only one feature
 
 std_dev =  np.std(X,axis=0)
+if std_dev.any()==0:
+    print "standard deviation of the data is zero"
 mean = np.mean(X,axis=0)
 mean = np.tile(mean,(len(X),1))
 std_dev = np.tile(std_dev,(len(X),1))
@@ -53,16 +55,23 @@ def newton_method():
         diag_matr = np.diag(to_diagonalize[0])
         X_transpose = np.transpose(X)
         hessian = np.matmul(np.matmul(X_transpose,diag_matr),X)
-        hessian_inv = np.linalg.inv(hessian)
+        if np.linalg.det(hessian)==0:
+            print "the matrix is singular using pseudo inverse instead"
+            hessian_inv = np.linalg.pinv(hessian)
+        else:
+            hessian_inv = np.linalg.inv(hessian)
         update_amount = np.matmul(hessian_inv,grad_l_theta)
         print "iteration count -> ", count_iter, "\t delta_theta -> ",np.linalg.norm(np.transpose(update_amount))
+        # checking the convergence condition
         if np.linalg.norm(np.transpose(update_amount)) < epsilon:
             return theta
         theta = theta - update_amount
 
 
+
 theta = newton_method()
 print theta
+# plot points
 for i in range(m):
     if Y[i][0]==0:
         plt.plot(X[i][1],X[i][2],'ro',c='b')

@@ -69,6 +69,7 @@ def normal_eqns():
 
 
 theta = gradient_descent()
+print theta
 # convert data to be plotted to standard form
 X_save = (X_save-np.mean(X_save))/np.std(X_save)
 X_min = np.min(X_save)
