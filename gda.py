@@ -63,6 +63,8 @@ def gda():
 
 
 phi,u0,u1,cov0,cov1,cov = gda()
+# print u0
+# print u1
 for i in range(m):
     if Y[i][0]==0:
         plt.plot(X[i][0],X[i][1],'ro',c='b')

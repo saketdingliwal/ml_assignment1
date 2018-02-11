@@ -34,8 +34,8 @@ if m == 0 :
 x0 = np.ones((m,1))
 X = np.hstack((x0,X)) # adding ones to training vectors
 
-alpha = 0.00004 # learning rate
-epsilon = 0.0001 # stopping criterion
+alpha = 0.0008 # learning rate
+epsilon = 1e-15 # stopping criterion
 
 
 
@@ -51,7 +51,7 @@ def gradient_descent():
         error = Y - hypothesis_val
         J_theta = 0.5 * np.matmul(np.transpose(error),error)
         # if count_iter%10==1:
-        ax.scatter(theta[0],theta[1],J_theta[0][0],marker='o',c='r',s=2)
+        ax.scatter(theta[0],theta[1],J_theta[0][0],marker='o',c='r',s=10)
         plt.pause(0.02)
         print "iteration count -> ", count_iter, "\t J(theta) -> ",np.asscalar(J_theta)
         if abs(np.asscalar(J_theta - prev_J_theta)) < epsilon:
@@ -76,7 +76,6 @@ fig = plt.figure()
 ax = fig.gca(projection='3d')
 
 # Make data.
-# theta = gradient_descent()
 theta1 = np.arange(-0.15,1.8,0.01)
 theta2 = np.arange(-0.7,0.7,0.01)
 theta1, theta2 = np.meshgrid(theta1, theta2)
@@ -88,25 +87,6 @@ for i in range(m):
 Z = Z /2.0
 
 
-# Plot the surface.
 surf = ax.plot_wireframe(theta1, theta2, Z,linewidth=0.5)
-
-# ax.zaxis.set_major_locator(LinearLocator(10))
-# ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
-
 plt.ion()
 theta = gradient_descent()
-# Add a color bar which maps values to colors.
-# fig.colorbar(surf, shrink=0.5, aspect=5)
-
-
-#
-
-# theta = normal_eqns()
-# X_min = np.min(X_save)
-# X_max = np.max(X_save)
-# Y_min = theta[0][0] + theta[1][0] * X_min
-# Y_max = theta[0][0] + theta[1][0] * X_max
-# plt.plot([X_min,X_max],[Y_min,Y_max],c='b')
-# plt.plot(X_save, Y_save,'ro')
-# plt.show()

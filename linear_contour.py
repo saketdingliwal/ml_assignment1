@@ -4,22 +4,23 @@ import numpy as np
 from numpy import genfromtxt
 import time
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
+from matplotlib.ticker import LinearLocator, FormatStrFormatter
+
+
 
 X = genfromtxt('dataset/linearX.csv',delimiter = ',') # list of training example vectors
 X_save = X
 if X.ndim == 1:
     X = X[np.newaxis]
     X = np.transpose(X) # convert into 2-d matrix if there is only one feature
-
-#normalize data
 std_dev =  np.std(X,axis=0)
-if std_dev.any()==0:
-    print "standard deviation of the data is zero"
 mean = np.mean(X,axis=0)
 mean = np.tile(mean,(len(X),1))
 std_dev = np.tile(std_dev,(len(X),1))
-X = (X - mean)/std_dev
 
+X = (X - mean)/std_dev
 
 
 Y = genfromtxt('dataset/linearY.csv',delimiter = ',') # list of training outputs
@@ -34,12 +35,12 @@ x0 = np.ones((m,1))
 X = np.hstack((x0,X)) # adding ones to training vectors
 
 alpha = 0.0008 # learning rate
-epsilon = 1e-15 # stopping criterion
+epsilon = 1e-10 # stopping criterion
 
+levels = []
 
-
-def gradient_descent():
-    global X,Y,alpha,epsilon
+def gradient_descent(flag):
+    global X,Y,alpha,epsilon,levels
     n = len(X[0]) # number of input features
     theta = np.zeros((n,1)) # initialized parameters with zero
     prev_J_theta = np.zeros((1,1))
@@ -49,7 +50,11 @@ def gradient_descent():
         hypothesis_val = np.matmul(X,theta)
         error = Y - hypothesis_val
         J_theta = 0.5 * np.matmul(np.transpose(error),error)
-        print "iteration count -> ", count_iter, "\t J(theta) -> ",np.asscalar(J_theta)
+        if flag==0:
+            levels.append(J_theta[0][0])
+        if flag==1:
+            plt.plot([theta[0]],[theta[1]],'ro',c='r')
+            plt.pause(0.2)
         if abs(np.asscalar(J_theta - prev_J_theta)) < epsilon:
             return theta
         prev_J_theta = J_theta
@@ -68,14 +73,22 @@ def normal_eqns():
     return theta
 
 
-theta = gradient_descent()
-# convert data to be plotted to standard form
-X_save = (X_save-np.mean(X_save))/np.std(X_save)
-X_min = np.min(X_save)
-X_max = np.max(X_save)
-# get the linear line to be plotted
-Y_min = theta[0][0] + theta[1][0] * X_min
-Y_max = theta[0][0] + theta[1][0] * X_max
-plt.plot([X_min,X_max],[Y_min,Y_max],c='b')
-plt.plot(X_save, Y_save,'ro')
-plt.show()
+
+theta1 = np.arange(-0.2,2,0.01)
+theta2 = np.arange(-1,1,0.01)
+theta1, theta2 = np.meshgrid(theta1, theta2)
+for i in range(m):
+    if i==0:
+        Z = (theta1 + theta2 * X[i][1] - Y[i][0])**2
+    else:
+        Z += (theta1 + theta2 * X[i][1] - Y[i][0])**2
+Z = Z /2.0
+
+
+theta = gradient_descent(0)
+plt.figure()
+levels = np.sort(levels)
+CS = plt.contour(theta1, theta2, Z,levels=levels)
+plt.clabel(CS, inline=1, fontsize=10)
+plt.ion()
+theta = gradient_descent(1)
