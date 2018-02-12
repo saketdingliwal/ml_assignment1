@@ -10,36 +10,34 @@ from matplotlib.ticker import LinearLocator, FormatStrFormatter
 
 
 
-X = genfromtxt('dataset/linearX.csv',delimiter = ',') # list of training example vectors
-X_save = X
-if X.ndim == 1:
-    X = X[np.newaxis]
-    X = np.transpose(X) # convert into 2-d matrix if there is only one feature
-std_dev =  np.std(X,axis=0)
-if std_dev.any()==0:
-    print "standard deviation of the data is zero"
-mean = np.mean(X,axis=0)
-mean = np.tile(mean,(len(X),1))
-std_dev = np.tile(std_dev,(len(X),1))
-
-X = (X - mean)/std_dev
-
-
-Y = genfromtxt('dataset/linearY.csv',delimiter = ',') # list of training outputs
-Y_save = Y
-Y = Y[np.newaxis]
-Y = np.transpose(Y) # now we have Y as column vector
-
-m = len(X) # number of training examples
-if m == 0 :
-    print "Training data missing"
-x0 = np.ones((m,1))
-X = np.hstack((x0,X)) # adding ones to training vectors
-
-alpha = 0.001 # learning rate
-epsilon = 1e-10 # stopping criterion
-
+alpha = 0.0008 # learning rate
+epsilon = 1e-15 # stopping criterion
 levels = []
+
+
+def get_data():
+    X = genfromtxt('dataset/linearX.csv',delimiter = ',') # list of training example vectors
+    X_save = X
+    if X.ndim == 1:
+        X = X[np.newaxis]
+        X = np.transpose(X) # convert into 2-d matrix if there is only one feature
+    Y = genfromtxt('dataset/linearY.csv',delimiter = ',') # list of training outputs
+    Y_save = Y
+    Y = Y[np.newaxis]
+    Y = np.transpose(Y) # now we have Y as column vector
+    return X,Y,X_save,Y_save
+    
+#normalize data
+def normalize(X):
+    std_dev =  np.std(X,axis=0)
+    if std_dev.any()==0:
+        print "standard deviation of the data is zero"
+    mean = np.mean(X,axis=0)
+    mean = np.tile(mean,(len(X),1))
+    std_dev = np.tile(std_dev,(len(X),1))
+    X = (X - mean)/std_dev
+    return X
+
 
 def gradient_descent(flag):
     global X,Y,alpha,epsilon,levels
@@ -75,6 +73,15 @@ def normal_eqns():
     theta = np.matmul(Xt_X_inv_Xt,Y)
     return theta
 
+
+X,Y,X_save,Y_save = get_data()
+X = normalize(X)
+
+m = len(X) # number of training examples
+if m == 0 :
+    print "Training data missing"
+x0 = np.ones((m,1))
+X = np.hstack((x0,X)) # adding ones to training vectors
 
 
 theta1 = np.arange(-0.2,2,0.01)

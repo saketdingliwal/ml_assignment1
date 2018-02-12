@@ -5,34 +5,33 @@ from numpy import genfromtxt
 import time
 import matplotlib.pyplot as plt
 
-X = genfromtxt('dataset/logisticX.csv',delimiter = ',') # list of training example vectors
-X_save = X
-if X.ndim == 1:
-    X = X[np.newaxis]
-    X = np.transpose(X) # convert into 2-d matrix if there is only one feature
-
-std_dev =  np.std(X,axis=0)
-if std_dev.any()==0:
-    print "standard deviation of the data is zero"
-mean = np.mean(X,axis=0)
-mean = np.tile(mean,(len(X),1))
-std_dev = np.tile(std_dev,(len(X),1))
-
-X = (X - mean)/std_dev
+alpha = 0.0008 # learning rate
+epsilon = 1e-10 # stopping criterion
 
 
-Y = genfromtxt('dataset/logisticY.csv',delimiter = ',') # list of training outputs
-Y_save = Y
-Y = Y[np.newaxis]
-Y = np.transpose(Y) # now we have Y as column vector
+def get_data():
+    X = genfromtxt('dataset/logisticX.csv',delimiter = ',') # list of training example vectors
+    X_save = X
+    if X.ndim == 1:
+        X = X[np.newaxis]
+        X = np.transpose(X) # convert into 2-d matrix if there is only one feature
+    Y = genfromtxt('dataset/logisticY.csv',delimiter = ',') # list of training outputs
+    Y_save = Y
+    Y = Y[np.newaxis]
+    Y = np.transpose(Y) # now we have Y as column vector
+    return X,Y,X_save,Y_save
+    
+#normalize data
+def normalize(X):
+    std_dev =  np.std(X,axis=0)
+    if std_dev.any()==0:
+        print "standard deviation of the data is zero"
+    mean = np.mean(X,axis=0)
+    mean = np.tile(mean,(len(X),1))
+    std_dev = np.tile(std_dev,(len(X),1))
+    X = (X - mean)/std_dev
+    return X
 
-m = len(X) # number of training examples
-if m == 0 :
-    print "Training data missing"
-x0 = np.ones((m,1))
-X = np.hstack((x0,X)) # adding ones to training vectors
-
-epsilon = 0.0000000001
 
 
 def g_theta(z):
@@ -68,19 +67,29 @@ def newton_method():
         theta = theta - update_amount
 
 
+X,Y,X_save,Y_save = get_data()
+X = normalize(X)
+
+m = len(X) # number of training examples
+if m == 0 :
+    print "Training data missing"
+x0 = np.ones((m,1))
+X = np.hstack((x0,X)) # adding ones to training vectors
 
 theta = newton_method()
-print theta
+print "theta",theta
 # plot points
 for i in range(m):
     if Y[i][0]==0:
-        plt.plot(X[i][1],X[i][2],'ro',c='b')
+        y0, = plt.plot(X[i][1],X[i][2],'ro',c='b',label='0')
     else:
-        plt.plot(X[i][1],X[i][2],'ro',c='r')
+        y1, = plt.plot(X[i][1],X[i][2],'ro',c='r',label='1')
+plt.legend(handles=[y0,y1])
 X_transpose = np.transpose(X)
 X_min = np.min(X_transpose[1])
 X_max = np.max(X_transpose[2])
 x = np.linspace(X_min, X_max, 50)
 plt.plot(x,(-1.0/theta[2])*(theta[0]+theta[1]*x),c='g')
 plt.plot()
+plt.savefig('logistic' + ".jpeg")
 plt.show()
