@@ -36,7 +36,7 @@ if m == 0 :
 x0 = np.ones((m,1))
 X = np.hstack((x0,X)) # adding ones to training vectors
 
-alpha = 0.0008 # learning rate
+alpha = 0.001 # learning rate
 epsilon = 1e-10 # stopping criterion
 
 levels = []
@@ -59,6 +59,7 @@ def gradient_descent(flag):
             plt.pause(0.2)
         if abs(np.asscalar(J_theta - prev_J_theta)) < epsilon:
             return theta
+        print "iteration count -> ", count_iter, "\t J(theta) -> ",np.asscalar(J_theta)
         prev_J_theta = J_theta
         X_transpose = np.transpose(X)
         update_theta = np.matmul(X_transpose,error) #using linear derivative formulae
@@ -94,3 +95,4 @@ CS = plt.contour(theta1, theta2, Z,levels=levels)
 plt.clabel(CS, inline=1, fontsize=10)
 plt.ion()
 theta = gradient_descent(1)
+plt.savefig('linear_contour' + (str)(alpha) + ".jpeg")

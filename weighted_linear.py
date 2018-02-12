@@ -34,7 +34,7 @@ X = np.hstack((x0,X)) # adding ones to training vectors
 
 alpha = 0.00004 # learning rate
 epsilon = 0.0000001 # stopping criterion
-tau = 0.2
+tau = 0.3
 
 
 def make_W(point_X):
@@ -105,4 +105,6 @@ for i in range(1000):
     theta = normal_wtd_eqns(point_X)
     Hyp_save.append(theta[0][0] + theta[1][0] * X_save_sort[i])
 plt.plot(X_save_sort,Hyp_save,c="b")
+plt.savefig('weighted_linear' + (str)(tau) + ".jpeg")
 plt.show()
+
